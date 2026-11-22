@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Wedding Planner</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="./css/dashboard.css">
+    <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="topnav">
+    <h1>💒 Wedding Planner</h1>
+    <div>
+      <span class="user-greeting">Halo, <strong id="user-name"></strong></span>
+      <button class="btn-logout" id="logout-btn">Keluar</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div id="loading" class="loading-text">Memuat data...</div>
+
+    <!-- LAYAR AWAL (BELUM ADA WEDDING) -->
+    <div id="no-wedding" style="display:none;" class="card">
+      <h2>Selamat datang! 🎉</h2>
+      <p>Buat rencana pernikahan baru atau gabung dengan pasangan.</p>
+      
+      <form onsubmit="createWedding(event)" class="form-inline">
+        <input type="text" id="couple-name" placeholder="Nama Pasangan (mis: Rizki & Hana)" required>
+        <input type="date" id="wedding-date" required>
+        <button type="submit" class="btn-primary">Buat Wedding Plan</button>
+      </form>
+      
+      <div class="divider"><span>ATAU</span></div>
+      
+      <form onsubmit="joinWedding(event)" class="form-inline">
+        <input type="text" id="invite-code" placeholder="Kode Undangan Pasangan" required>
+        <button type="submit" class="btn-primary" style="background:#2b2b2b;">Gabung</button>
+      </form>
+    </div>
+
+    <!-- DASHBOARD UTAMA (JIKA SUDAH ADA WEDDING) -->
+    <div id="wedding-content" style="display:none;">
+      <div class="card header-card">
+        <h2 id="couple-title" style="font-family: 'Inter', 'Segoe UI', sans-serif;"> </h2>
+        <p>Kode Undangan: <strong id="invite-code-display" class="invite-code"></strong></p>
+      </div>
+
+      <!-- TABS NAVIGASI -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-timeline')">Timeline</button>
+        <button class="tab-btn" onclick="switchTab('tab-checklist')">Checklist</button>
+        <button class="tab-btn" onclick="switchTab('tab-budget')">Budget</button>
+        <button class="tab-btn" onclick="switchTab('tab-guests')">Tamu</button>
+        <button class="tab-btn" onclick="switchTab('tab-venues')">Venue</button>
+        <button class="tab-btn" onclick="switchTab('tab-vendors')">Vendor</button>
+        <button class="tab-btn" onclick="switchTab('tab-itinerary')">Itinerary</button> <!-- BARU -->
+        <button class="tab-btn" onclick="switchTab('tab-notes')">Notes</button> <!-- BARU -->
+      </div>
+
+      <!-- LATAR BELAKANG KOLASE -->
+  <div class="bg-collage">
+    <img src="./images/2.jpeg" class="collage-img img1" alt="">
+    <img src="./images/3.jpeg" class="collage-img img2" alt="">
+    <img src="./images/6.jpeg" class="collage-img img3" alt="">
+    <img src="./images/5.jpeg" class="collage-img img4" alt="">
+    <img src="./images/4.jpeg" class="collage-img img5" alt="">
+  </div>
+
+      <!-- KONTEN: TIMELINE -->
+      <div id="tab-timeline" class="tab-content active">
+        <h3>Agenda Pernikahan</h3>
+        
+        <form onsubmit="addTask(event)" class="form-inline" id="task-form">
+          <input type="text" id="task-title" placeholder="Agenda (mis: Fitting Baju)" required>
+          <input type="date" id="task-date" required>
+          <select id="task-icon" style="flex: 0.5; min-width: 120px;" title="Pilih Ikon">
+            <option value="ring">💍 Cincin</option>
+            <option value="mail">💌 Undangan</option>
+            <option value="shirt">👗 Baju / Fitting</option>
+            <option value="camera">📸 Foto / Prewedding</option>
+            <option value="cake">🎂 Kue</option>
+            <option value="utensils">🍽️ Katering</option>
+            <option value="flower">💐 Dekorasi</option>
+            <option value="music">🎵 Musik</option>
+            <option value="church">⛪ Gedung</option>
+            <option value="calendar">📅 Agenda</option>
+          </select>
+          <button type="submit" class="btn-primary">Tambah</button>
+        </form>
+
+        <div id="timeline-nodes" class="timeline"></div>
+      </div>
+
+            <!-- KONTEN: CHECKLIST -->
+      <div id="tab-checklist" class="tab-content">
+        <h3>Wedding Checklist</h3>
+        
+        <form onsubmit="addChecklist(event)" class="form-inline" id="checklist-form">
+          <input type="hidden" id="checklist-id">
+          <input type="text" id="checklist-task" placeholder="Tugas baru (mis: Pesan Katering)" required style="flex: 2;">
+          <button type="submit" class="btn-primary" id="btn-submit-checklist">Tambah Tugas</button>
+          <button type="button" class="btn-primary" id="btn-cancel-checklist" style="background:#6b7280; display:none;" onclick="cancelEditChecklist()">Batal</button>
+        </form>
+
+        <div class="progress-container">
+          <div class="progress-header">
+            <span class="progress-label">Progres Persiapan</span>
+            <span id="checklist-progress-text" class="progress-percent">0% (0/0)</span>
+          </div>
+          <div class="progress-track">
+            <div id="checklist-progress-bar" class="progress-fill"></div>
+          </div>
+        </div>
+
+        <ul id="checklist-list" class="item-list"></ul>
+      </div>
+
+      <!-- KONTEN: BUDGET -->
+      <div id="tab-budget" class="tab-content">
+        <h3>Catatan Budget</h3>
+        
+        <form onsubmit="addBudget(event)" class="form-inline" id="budget-form">
+          <input type="hidden" id="budget-id">
+          <input type="text" id="budget-item" placeholder="Nama Pengeluaran (mis: Catering)" required>
+          <input type="number" id="budget-estimated" placeholder="Rencana Biaya (Rp)" required>
+          <input type="number" id="budget-actual" placeholder="Sudah Keluar (Rp)" value="0">
+          <button type="submit" class="btn-primary" id="btn-submit-budget">Tambah</button>
+          <button type="button" class="btn-primary" id="btn-cancel-budget" style="background:#6b7280; display:none;" onclick="cancelEditBudget()">Batal</button>
+        </form>
+
+        <div class="budget-summary">
+          <div>Total Rencana: <strong id="total-estimated">Rp 0</strong></div>
+          <div>Total Keluar: <strong id="total-actual">Rp 0</strong></div>
+          <div>Sisa Budget: <strong id="total-remaining" style="color: #ec4899;">Rp 0</strong></div>
+        </div>
+
+        <ul id="budget-list" class="item-list"></ul>
+      </div>
+
+      <!-- KONTEN: GUESTS -->
+      <div id="tab-guests" class="tab-content">
+        <h3>Daftar Tamu Undangan</h3>
+        
+        <form onsubmit="addGuest(event)" class="form-inline" id="guest-form">
+          <input type="hidden" id="guest-id">
+          <input type="text" id="guest-name" placeholder="Nama Tamu / Keluarga" required>
+          <input type="number" id="guest-pax" placeholder="Jml Orang" min="1" value="1" required style="width: 100px; flex: none;">
+          <select id="guest-category">
+            <option value="Family">Keluarga</option>
+            <option value="Friend">Teman</option>
+            <option value="Colleague">Rekan Kerja</option>
+          </select>
+          <select id="guest-side">
+            <option value="Both">Bersama</option>
+            <option value="Bride">Mempelai Wanita</option>
+            <option value="Groom">Mempelai Pria</option>
+          </select>
+          <button type="submit" class="btn-primary" id="btn-submit-guest">Tambah Tamu</button>
+          <button type="button" class="btn-primary" id="btn-cancel-edit" style="background:#6b7280; display:none;" onclick="cancelEditGuest()">Batal</button>
+        </form>
+
+        <div class="guest-toolbar">
+          <div class="toolbar-row">
+            <!-- Kotak Pencarian (Memanjang) -->
+            <input type="text" id="search-guest" placeholder="Cari nama tamu..." onkeyup="filterGuests()" class="search-input">
+            
+            <!-- Grup Kanan: Filter & Statistik -->
+            <div class="toolbar-right-group">
+              <select id="filter-status" onchange="filterStatus(this.value)" class="filter-dropdown">
+                <option value="All">Semua Tamu</option>
+                <option value="Attending">Hadir</option>
+                <option value="Pending">Belum Konfirmasi</option>
+                <option value="Declined">Batal</option>
+              </select>
+
+              <div class="guest-stats">
+                Total: <strong id="total-guests">0</strong> | Hadir: <strong id="total-attending">0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ul id="guest-list" class="item-list"></ul>
+      </div>
+
+      <!-- KONTEN: VENUES -->
+      <div id="tab-venues" class="tab-content">
+        <h3>Daftar Venue (Lokasi)</h3>
+        <form onsubmit="addVenue(event)" class="form-inline" id="venue-form">
+          <input type="hidden" id="venue-id">
+          <input type="text" id="venue-name" placeholder="Nama Gedung / Venue" required>
+          <input type="number" id="venue-cost" placeholder="Estimasi Sewa (Rp)" required>
+          <input type="text" id="venue-benefit" placeholder="Kapasitas / Benefit">
+          <input type="url" id="venue-map" placeholder="Link Google Maps" style="flex: 2;">
+          <button type="submit" class="btn-primary" id="btn-submit-venue">Tambah</button>
+          <button type="button" class="btn-primary" id="btn-cancel-venue" style="background:#6b7280; display:none;" onclick="cancelEditVenue()">Batal</button>
+        </form>
+        <ul id="venue-list" class="item-list"></ul>
+      </div>
+
+      <!-- KONTEN: VENDORS -->
+      <div id="tab-vendors" class="tab-content">
+        <h3>Daftar Vendor</h3>
+        <form onsubmit="addVendor(event)" class="form-inline" id="vendor-form">
+          <input type="hidden" id="vendor-id">
+          <input type="text" id="vendor-name" placeholder="Nama Vendor" required>
+          <select id="vendor-category">
+            <option value="Catering">Catering</option>
+            <option value="MUA">MUA (Make Up)</option>
+            <option value="Photography">Fotografi</option>
+            <option value="Decoration">Dekorasi</option>
+            <option value="Music">Musik / Entertainment</option>
+            <option value="Other">Lainnya</option>
+          </select>
+          <input type="text" id="vendor-contact" placeholder="No HP / Kontak">
+          <input type="number" id="vendor-cost" placeholder="Ekspektasi Biaya (Rp)" required>
+          <input type="text" id="vendor-benefit" placeholder="Benefit (mis: Free 1 baju)">
+          <button type="submit" class="btn-primary" id="btn-submit-vendor">Tambah</button>
+          <button type="button" class="btn-primary" id="btn-cancel-vendor" style="background:#6b7280; display:none;" onclick="cancelEditVendor()">Batal</button>
+        </form>
+        <ul id="vendor-list" class="item-list"></ul>
+      </div>
+
+            <!-- KONTEN: ITINERARY (SUSUNAN ACARA) -->
+      <div id="tab-itinerary" class="tab-content">
+        <h3>Itinerary (Susunan Acara)</h3>
+        
+        <form onsubmit="addItinerary(event)" class="form-inline" id="itinerary-form" style="background: #faf9f7; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+          <input type="hidden" id="itinerary-id">
+          <input type="time" id="itinerary-time" required style="flex: 0.5; min-width: 100px;">
+          <input type="text" id="itinerary-title" placeholder="Nama Acara (mis: Akad Nikah)" required style="flex: 2;">
+          <button type="submit" class="btn-primary" id="btn-submit-itinerary">Tambah</button>
+          <button type="button" class="btn-primary" id="btn-cancel-itinerary" style="background:#6b7280; display:none;" onclick="cancelEditItinerary()">Batal</button>
+        </form>
+
+        <ul id="itinerary-list" class="item-list"></ul>
+      </div>
+
+      <!-- KONTEN: NOTES (CATATAN PENTING) -->
+      <div id="tab-notes" class="tab-content">
+        <h3>Catatan Penting</h3>
+        
+        <form onsubmit="addNote(event)" class="form-inline" id="note-form" style="background: #faf9f7; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+          <input type="hidden" id="note-id">
+          <input type="text" id="note-title" placeholder="Judul Catatan (mis: Kontak WO)" required style="flex: 1;">
+          <input type="text" id="note-content" placeholder="Isi detail catatan..." style="flex: 2;">
+          <button type="submit" class="btn-primary" id="btn-submit-note">Tambah</button>
+          <button type="button" class="btn-primary" id="btn-cancel-note" style="background:#6b7280; display:none;" onclick="cancelEditNote()">Batal</button>
+        </form>
+
+        <ul id="note-list" class="item-list"></ul>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { isLoggedIn, logout } from './js/api.js';
+    import { initDashboard } from './js/dashboard.js';
+
+    if (!isLoggedIn()) window.location.href = './login.html';
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) document.getElementById('user-name').textContent = user.name;
+
+    initDashboard();
+  </script>
+</body>
+</html>
