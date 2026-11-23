@@ -351,3 +351,26 @@ h3 { font-size: 1.5rem; color: #2B2B2B; margin-bottom: 1.5rem; border-bottom: 1p
   box-shadow: 0 0 0 3px rgba(192, 108, 76, 0.1);
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C06C4C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
 }
+
+/* ===== FORM PADA LAYAR AWAL (NO WEDDING) ===== */
+#no-wedding input {
+  padding: 0.75rem 1rem; 
+  border: 1px solid #E5E0D8; 
+  border-radius: 6px; 
+  font-size: 0.95rem; 
+  background: #fff;
+  font-family: inherit;
+  color: #2B2B2B;
+  width: 100%;
+}
+
+#no-wedding input:focus {
+  outline: none; 
+  border-color: #C06C4C; 
+  box-shadow: 0 0 0 3px rgba(192, 108, 76, 0.1);
+}
+
+/* Menyesuaikan jarak divider */
+#no-wedding .divider {
+  margin: 2rem 0;
+}

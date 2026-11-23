@@ -4,22 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daftar - Wedding Planner</title>
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/auth.css">
 </head>
 <body class="auth-page">
   
-  <!-- LATAR BELAKANG KOLASE (Sama seperti Login) -->
+  <!-- LATAR BELAKANG KOLASE -->
   <div class="bg-collage">
-    <img src="./images/3.jpeg" class="collage-img img1" alt="">
-    <img src="./images/6.jpeg" class="collage-img img2" alt="">
-    <img src="./images/4.jpeg" class="collage-img img3" alt="">
-    <img src="./images/2.jpeg" class="collage-img img4" alt="">
-    <img src="./images/5.jpeg" class="collage-img img5" alt="">
+    <img src="./images/foto1.jpg" class="collage-img img1" alt="">
+    <img src="./images/foto2.jpg" class="collage-img img2" alt="">
+    <img src="./images/foto3.jpg" class="collage-img img3" alt="">
+    <img src="./images/foto4.jpg" class="collage-img img4" alt="">
+    <img src="./images/foto5.jpg" class="collage-img img5" alt="">
   </div>
 
-  <!-- KARTU KACA (GLASS) -->
+  <!-- KARTU KACA -->
   <div class="auth-card">
     <h1>Buat Akun</h1>
     <p>Mulai rencanakan pernikahan impian Anda</p>
@@ -28,6 +27,13 @@
       <input type="text" id="name" placeholder="Nama Lengkap" required>
       <input type="email" id="email" placeholder="Alamat Email" required>
       <input type="password" id="password" placeholder="Password (minimal 6 karakter)" required>
+      
+      <!-- Checkbox Remember Me -->
+      <div class="remember-me-group">
+        <input type="checkbox" id="remember-me">
+        <label for="remember-me">Ingat Saya (30 Hari)</label>
+      </div>
+      
       <button type="submit" id="btn-reg">Daftar</button>
     </form>
     
@@ -53,7 +59,8 @@
         const data = await api('/auth/register', 'POST', {
           name: document.getElementById('name').value,
           email: document.getElementById('email').value,
-          password: document.getElementById('password').value
+          password: document.getElementById('password').value,
+          rememberMe: document.getElementById('remember-me').checked
         });
         
         localStorage.setItem('token', data.token);

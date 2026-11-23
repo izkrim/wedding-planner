@@ -26,21 +26,29 @@
 
     <!-- LAYAR AWAL (BELUM ADA WEDDING) -->
     <div id="no-wedding" style="display:none;" class="card">
-      <h2>Selamat datang! 🎉</h2>
-      <p>Buat rencana pernikahan baru atau gabung dengan pasangan.</p>
+      <h2 style="text-align: center; margin-bottom: 10px; font-family: 'Playfair Display', serif; color: #2B2B2B;">Selamat datang! 🎉</h2>
+      <p style="text-align: center; color: #8A827A; margin-bottom: 2rem;">Buat rencana pernikahan baru atau gabung dengan pasangan.</p>
       
-      <form onsubmit="createWedding(event)" class="form-inline">
-        <input type="text" id="couple-name" placeholder="Nama Pasangan (mis: Rizki & Hana)" required>
-        <input type="date" id="wedding-date" required>
-        <button type="submit" class="btn-primary">Buat Wedding Plan</button>
-      </form>
+      <!-- FORM BUAT BARU -->
+      <div style="background: rgba(255, 255, 255, 0.4); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.6); margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1rem; border-bottom: none; padding-bottom: 0;">Buat Wedding Plan Baru</h3>
+        <form onsubmit="createWedding(event)" style="display: flex; flex-direction: column; gap: 15px;">
+          <input type="text" id="couple-name" placeholder="Nama Pasangan (mis: Rizki & Hana)" required>
+          <input type="date" id="wedding-date" required>
+          <button type="submit" class="btn-primary" style="width: 100%;">Buat Wedding Plan</button>
+        </form>
+      </div>
       
       <div class="divider"><span>ATAU</span></div>
       
-      <form onsubmit="joinWedding(event)" class="form-inline">
-        <input type="text" id="invite-code" placeholder="Kode Undangan Pasangan" required>
-        <button type="submit" class="btn-primary" style="background:#2b2b2b;">Gabung</button>
-      </form>
+      <!-- FORM GABUNG -->
+      <div style="background: rgba(255, 255, 255, 0.4); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.6);">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1rem; border-bottom: none; padding-bottom: 0;">Gabung dengan Pasangan</h3>
+        <form onsubmit="joinWedding(event)" style="display: flex; flex-direction: column; gap: 15px;">
+          <input type="text" id="invite-code" placeholder="Masukkan Kode Undangan" required style="text-transform: uppercase;">
+          <button type="submit" class="btn-primary" style="width: 100%; background: #2B2B2B;">Gabungkan</button>
+        </form>
+      </div>
     </div>
 
     <!-- DASHBOARD UTAMA (JIKA SUDAH ADA WEDDING) -->
